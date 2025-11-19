@@ -44,7 +44,6 @@
         <table class="ui celled striped table">
             <thead>
                 <tr>
-                    <th>Customer Number</th>
                     <th>Customer Name</th>
                     <th>Contact Last Name</th>
                     <th>Contact First Name</th>
@@ -60,7 +59,6 @@
             <tbody>
                 {% for customer in customers %}
                 <tr>
-                    <td class="positive"><strong>{{ customer['customerNumber'] }}</strong></td>
                     <td><strong>{{ customer['customerName'] }}</strong></td>
                     <td>{{ customer['contactLastName'] }}</td>
                     <td>{{ customer['contactFirstName'] }}</td>
@@ -79,15 +77,13 @@
                     <td class="center aligned">
                         <div class="ui buttons">
                             <a href="{{ url_for('edit_customer', customer_number=customer['customerNumber']) }}"
-                                class="ui small primary labeled icon button">
+                                class="ui small primary icon button" title="Edit customer">
                                 <i class="edit icon"></i>
-                                Modify
                             </a>
-                            <button class="ui small negative labeled icon button delete-btn"
+                            <button class="ui small negative icon button delete-btn"
                                 data-customer-number="{{ customer['customerNumber'] }}"
-                                data-customer-name="{{ customer['customerName'] }}">
+                                data-customer-name="{{ customer['customerName'] }}" title="Delete customer">
                                 <i class="trash icon"></i>
-                                Delete
                             </button>
                         </div>
                     </td>
