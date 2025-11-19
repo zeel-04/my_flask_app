@@ -1,0 +1,15 @@
+[project]
+name = "my-flask-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.1.2",
+    "pymysql>=1.1.2",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0",
+]

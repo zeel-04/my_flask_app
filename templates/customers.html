@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="ui container">
+    <h1 class="ui header center aligned" style="padding-top: 2rem;">Customer Database</h1>
+    <div style="overflow-x: auto;">
+        <table class="ui celled striped table">
+            <thead>
+                <tr>
+                    <th>Customer Number</th>
+                    <th>Customer Name</th>
+                    <th>Contact Last Name</th>
+                    <th>Contact First Name</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Sales Rep Employee Number</th>
+                    <th class="right aligned">Credit Limit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td class="positive"><strong>{{ customer['customerNumber'] }}</strong></td>
+                    <td><strong>{{ customer['customerName'] }}</strong></td>
+                    <td>{{ customer['contactLastName'] }}</td>
+                    <td>{{ customer['contactFirstName'] }}</td>
+                    <td>{{ customer['phone'] }}</td>
+                    <td>{{ customer['city'] }}</td>
+                    <td class="{% if customer['state'] is none %}disabled{% endif %}">
+                        {{ customer['state'] if customer['state'] is not none else '—' }}
+                    </td>
+                    <td>{{ customer['country'] }}</td>
+                    <td class="center aligned {% if customer['salesRepEmployeeNumber'] is none %}disabled{% endif %}">
+                        {{ customer['salesRepEmployeeNumber'] if customer['salesRepEmployeeNumber'] is not none else
+                        '—' }}
+                    </td>
+                    <td class="right aligned">${{ "{:,.2f}".format(customer['creditLimit']) if
+                        customer['creditLimit'] is not none else '0.00' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
