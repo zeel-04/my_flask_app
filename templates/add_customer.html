@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Add Customer{% endblock %}
+
+{% block content %}
+<div class="ui container">
+    <h1 class="ui header center aligned" style="padding-top: 2rem;">Add New Customer</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="ui {{ 'error' if category == 'error' else 'success' }} message">
+        <i class="close icon"></i>
+        <div class="header">{{ 'Error' if category == 'error' else 'Success' }}</div>
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="ui segment">
+        <form class="ui form" method="POST" action="{{ url_for('add_customer') }}">
+            <div class="field">
+                <label>Customer Name <span class="ui red text">*</span></label>
+                <input type="text" name="customerName" required>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Contact Last Name <span class="ui red text">*</span></label>
+                    <input type="text" name="contactLastName" required>
+                </div>
+                <div class="field">
+                    <label>Contact First Name <span class="ui red text">*</span></label>
+                    <input type="text" name="contactFirstName" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Phone <span class="ui red text">*</span></label>
+                <input type="text" name="phone" required>
+            </div>
+
+            <div class="three fields">
+                <div class="field">
+                    <label>City <span class="ui red text">*</span></label>
+                    <input type="text" name="city" required>
+                </div>
+                <div class="field">
+                    <label>State</label>
+                    <input type="text" name="state">
+                </div>
+                <div class="field">
+                    <label>Country <span class="ui red text">*</span></label>
+                    <input type="text" name="country" required>
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Sales Rep Employee Number</label>
+                    <input type="number" name="salesRepEmployeeNumber">
+                </div>
+                <div class="field">
+                    <label>Credit Limit</label>
+                    <input type="number" name="creditLimit" step="0.01" value="0.00">
+                </div>
+            </div>
+
+            <div class="ui divider"></div>
+
+            <div class="ui buttons">
+                <a href="{{ url_for('customers') }}" class="ui labeled icon button">
+                    <i class="cancel icon"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="ui primary labeled icon button">
+                    <i class="plus icon"></i>
+                    Add Customer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function () {
+        // Close flash messages
+        $('.message .close').on('click', function () {
+            $(this).closest('.message').transition('fade');
+        });
+    });
+</script>
+{% endblock %}
+

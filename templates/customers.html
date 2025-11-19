@@ -5,6 +5,41 @@
 {% block content %}
 <div class="ui container">
     <h1 class="ui header center aligned" style="padding-top: 2rem;">Customer Database</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="ui {{ 'error' if category == 'error' else 'success' }} message">
+        <i class="close icon"></i>
+        <div class="header">{{ 'Error' if category == 'error' else 'Success' }}</div>
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div style="margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center;">
+        <form method="GET" action="{{ url_for('customers') }}" style="flex: 1; display: flex; gap: 0.5rem;">
+            <div class="ui icon input" style="flex: 1;">
+                <input type="text" name="search" placeholder="Search by customer name..."
+                    value="{{ search_query or '' }}">
+                <i class="search icon"></i>
+            </div>
+            <button type="submit" class="ui button">
+                Search
+            </button>
+            {% if search_query %}
+            <a href="{{ url_for('customers') }}" class="ui button">
+                Clear
+            </a>
+            {% endif %}
+        </form>
+        <a href="{{ url_for('add_customer') }}" class="ui primary labeled icon button">
+            <i class="plus icon"></i>
+            Add Customer
+        </a>
+    </div>
+
     <div style="overflow-x: auto;">
         <table class="ui celled striped table">
             <thead>
@@ -19,6 +54,7 @@
                     <th>Country</th>
                     <th>Sales Rep Employee Number</th>
                     <th class="right aligned">Credit Limit</th>
+                    <th class="center aligned">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,10 +76,67 @@
                     </td>
                     <td class="right aligned">${{ "{:,.2f}".format(customer['creditLimit']) if
                         customer['creditLimit'] is not none else '0.00' }}</td>
+                    <td class="center aligned">
+                        <div class="ui buttons">
+                            <a href="{{ url_for('edit_customer', customer_number=customer['customerNumber']) }}"
+                                class="ui small primary labeled icon button">
+                                <i class="edit icon"></i>
+                                Modify
+                            </a>
+                            <button class="ui small negative labeled icon button delete-btn"
+                                data-customer-number="{{ customer['customerNumber'] }}"
+                                data-customer-name="{{ customer['customerName'] }}">
+                                <i class="trash icon"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="ui small modal" id="deleteModal">
+    <div class="header">Delete Customer</div>
+    <div class="content">
+        <p>Are you sure you want to delete customer <strong id="deleteCustomerName"></strong>?</p>
+        <p class="ui red text">This action cannot be undone.</p>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">
+            <i class="cancel icon"></i>
+            Cancel
+        </div>
+        <form id="deleteForm" method="POST" style="display: inline;">
+            <button type="submit" class="ui red labeled icon button">
+                <i class="trash icon"></i>
+                Delete
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function () {
+        // Close flash messages
+        $('.message .close').on('click', function () {
+            $(this).closest('.message').transition('fade');
+        });
+
+        // Delete button handler
+        $('.delete-btn').on('click', function () {
+            var customerNumber = $(this).data('customer-number');
+            var customerName = $(this).data('customer-name');
+            $('#deleteCustomerName').text(customerName);
+            $('#deleteForm').attr('action', '/customers/' + customerNumber + '/delete');
+            $('#deleteModal').modal('show');
+        });
+    });
+</script>
 {% endblock %}

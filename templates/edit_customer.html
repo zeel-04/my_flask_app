@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Customer{% endblock %}
+
+{% block content %}
+<div class="ui container">
+    <h1 class="ui header center aligned" style="padding-top: 2rem;">Edit Customer</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="ui {{ 'error' if category == 'error' else 'success' }} message">
+        <i class="close icon"></i>
+        <div class="header">{{ 'Error' if category == 'error' else 'Success' }}</div>
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="ui segment">
+        <form class="ui form" method="POST"
+            action="{{ url_for('edit_customer', customer_number=customer['customerNumber']) }}">
+            <div class="two fields">
+                <div class="field">
+                    <label>Customer Number</label>
+                    <input type="text" value="{{ customer['customerNumber'] }}" disabled>
+                    <input type="hidden" name="customerNumber" value="{{ customer['customerNumber'] }}">
+                </div>
+                <div class="field">
+                    <label>Customer Name <span class="ui red text">*</span></label>
+                    <input type="text" name="customerName" value="{{ customer['customerName'] }}" required>
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Contact Last Name <span class="ui red text">*</span></label>
+                    <input type="text" name="contactLastName" value="{{ customer['contactLastName'] }}" required>
+                </div>
+                <div class="field">
+                    <label>Contact First Name <span class="ui red text">*</span></label>
+                    <input type="text" name="contactFirstName" value="{{ customer['contactFirstName'] }}" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Phone <span class="ui red text">*</span></label>
+                <input type="text" name="phone" value="{{ customer['phone'] }}" required>
+            </div>
+
+            <div class="three fields">
+                <div class="field">
+                    <label>City <span class="ui red text">*</span></label>
+                    <input type="text" name="city" value="{{ customer['city'] }}" required>
+                </div>
+                <div class="field">
+                    <label>State</label>
+                    <input type="text" name="state"
+                        value="{{ customer['state'] if customer['state'] is not none else '' }}">
+                </div>
+                <div class="field">
+                    <label>Country <span class="ui red text">*</span></label>
+                    <input type="text" name="country" value="{{ customer['country'] }}" required>
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Sales Rep Employee Number</label>
+                    <input type="number" name="salesRepEmployeeNumber"
+                        value="{{ customer['salesRepEmployeeNumber'] if customer['salesRepEmployeeNumber'] is not none else '' }}">
+                </div>
+                <div class="field">
+                    <label>Credit Limit</label>
+                    <input type="number" name="creditLimit" step="0.01"
+                        value="{{ customer['creditLimit'] if customer['creditLimit'] is not none else '0.00' }}">
+                </div>
+            </div>
+
+            <div class="ui divider"></div>
+
+            <div class="ui buttons">
+                <a href="{{ url_for('customers') }}" class="ui labeled icon button">
+                    <i class="cancel icon"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="ui primary labeled icon button">
+                    <i class="checkmark icon"></i>
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function () {
+        // Close flash messages
+        $('.message .close').on('click', function () {
+            $(this).closest('.message').transition('fade');
+        });
+    });
+</script>
+{% endblock %}
